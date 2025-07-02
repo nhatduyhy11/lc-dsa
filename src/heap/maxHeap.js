@@ -3,42 +3,33 @@
  * @copyright 2020 Eyas Ranjous <eyas.ranjous@gmail.com>
  */
 
-const { Heap } = require('./heap');
+const { Heap } = require('../heap');
 
-const getMinCompare = (getCompareValue) => (a, b) => {
+const getMaxCompare = (getCompareValue) => (a, b) => {
   const aVal = typeof getCompareValue === 'function' ? getCompareValue(a) : a;
   const bVal = typeof getCompareValue === 'function' ? getCompareValue(b) : b;
-  return aVal <= bVal ? -1 : 1;
+  return aVal < bVal ? 1 : -1;
 };
 
 /**
- * @class MinHeap
+ * @class MaxHeap
  * @extends Heap
  */
-class MinHeap {
+class MaxHeap {
   /**
    * @param {function} [getCompareValue]
    * @param {Heap} [_heap]
    */
   constructor(getCompareValue, _heap) {
     this._getCompareValue = getCompareValue;
-    this._heap = _heap || new Heap(getMinCompare(getCompareValue));
-  }
-
-  /**
-   * Converts the heap to a cloned array without sorting.
-   * @public
-   * @returns {Array}
-   */
-  toArray() {
-    return Array.from(this._heap._nodes);
+    this._heap = _heap || new Heap(getMaxCompare(getCompareValue));
   }
 
   /**
    * Inserts a new value into the heap
    * @public
    * @param {number|string|object} value
-   * @returns {MinHeap}
+   * @returns {MaxHeap}
    */
   insert(value) {
     return this._heap.insert(value);
@@ -82,9 +73,18 @@ class MinHeap {
   }
 
   /**
+   * Converts the heap to a cloned array without sorting.
+   * @public
+   * @returns {Array}
+   */
+  toArray() {
+    return Array.from(this._heap._nodes);
+  }
+
+  /**
    * Fixes node positions in the heap
    * @public
-   * @returns {MinHeap}
+   * @returns {MaxHeap}
    */
   fix() {
     return this._heap.fix();
@@ -153,12 +153,12 @@ class MinHeap {
   }
 
   /**
-   * Returns a shallow copy of the MinHeap
+   * Returns a shallow copy of the MaxHeap
    * @public
-   * @returns {MinHeap}
+   * @returns {MaxHeap}
    */
   clone() {
-    return new MinHeap(this._getCompareValue, this._heap.clone());
+    return new MaxHeap(this._getCompareValue, this._heap.clone());
   }
 
   /**
@@ -179,23 +179,23 @@ class MinHeap {
   }
 
   /**
-   * Builds a MinHeap from an array
+   * Builds a MaxHeap from an array
    * @public
    * @static
    * @param {array} values
    * @param {function} [getCompareValue]
-   * @returns {MinHeap}
+   * @returns {MaxHeap}
    */
   static heapify(values, getCompareValue) {
     if (!Array.isArray(values)) {
-      throw new Error('MinHeap.heapify expects an array');
+      throw new Error('MaxHeap.heapify expects an array');
     }
-    const heap = new Heap(getMinCompare(getCompareValue), values);
-    return new MinHeap(getCompareValue, heap).fix();
+    const heap = new Heap(getMaxCompare(getCompareValue), values);
+    return new MaxHeap(getCompareValue, heap).fix();
   }
 
   /**
-   * Checks if a list of values is a valid min heap
+   * Checks if a list of values is a valid max heap
    * @public
    * @static
    * @param {array} values
@@ -203,9 +203,9 @@ class MinHeap {
    * @returns {boolean}
    */
   static isHeapified(values, getCompareValue) {
-    const heap = new Heap(getMinCompare(getCompareValue), values);
-    return new MinHeap(getCompareValue, heap).isValid();
+    const heap = new Heap(getMaxCompare(getCompareValue), values);
+    return new MaxHeap(getCompareValue, heap).isValid();
   }
 }
 
-exports.MinHeap = MinHeap;
+exports.MaxHeap = MaxHeap;

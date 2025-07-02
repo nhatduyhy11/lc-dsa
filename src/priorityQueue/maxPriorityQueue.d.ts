@@ -1,4 +1,4 @@
-import { MaxHeap, IGetCompareValue } from '@datastructures-js/heap';
+import { MaxHeap, IGetCompareValue } from '../heap';
 import { LegacyOptions } from './minPriorityQueue';
 
 export class MaxPriorityQueue<T> implements Iterable<T> {

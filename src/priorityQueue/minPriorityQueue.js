@@ -3,23 +3,31 @@
  * @license MIT
  */
 
-const { Heap } = require('@datastructures-js/heap');
+const { Heap, MinHeap } = require('../heap');
+
+const getMinCompare = (getCompareValue) => (a, b) => {
+  const aVal = typeof getCompareValue === 'function' ? getCompareValue(a) : a;
+  const bVal = typeof getCompareValue === 'function' ? getCompareValue(b) : b;
+  return aVal <= bVal ? -1 : 1;
+};
 
 /**
- * @class PriorityQueue
+ * @class MinPriorityQueue
  */
-class PriorityQueue {
-  /**
-   * Creates a priority queue
-   * @params {function} compare
-   */
-  constructor(compare, _values) {
-    if (typeof compare !== 'function') {
-      throw new Error('PriorityQueue constructor expects a compare function');
-    }
-    this._heap = new Heap(compare, _values);
-    if (_values) {
-      this._heap.fix();
+class MinPriorityQueue {
+  constructor(options, _heap) {
+    // Handle legacy options format ({ compare: fn })
+    if (options && typeof options === 'object' && typeof options.compare === 'function') {
+      this._getCompareValue = null;
+      const compareFunction = (a, b) => options.compare(a, b) <= 0 ? -1 : 1;
+      this._heap = _heap || new Heap(compareFunction);
+    } else {
+      // Current format (direct compare function)
+      const getCompareValue = options;
+      if (getCompareValue && typeof getCompareValue !== 'function') {
+        throw new Error('MinPriorityQueue constructor requires a callback for object values');
+      }
+      this._heap = _heap || new MinHeap(getCompareValue);
     }
   }
 
@@ -45,7 +53,7 @@ class PriorityQueue {
    * Adds a value to the queue
    * @public
    * @param {number|string|object} value
-   * @returns {PriorityQueue}
+   * @returns {MinPriorityQueue}
    */
   enqueue(value) {
     return this._heap.insert(value);
@@ -55,7 +63,7 @@ class PriorityQueue {
    * Adds a value to the queue
    * @public
    * @param {number|string|object} value
-   * @returns {PriorityQueue}
+   * @returns {MinPriorityQueue}
    */
   push(value) {
     return this.enqueue(value);
@@ -87,7 +95,7 @@ class PriorityQueue {
    */
   remove(cb) {
     if (typeof cb !== 'function') {
-      throw new Error('PriorityQueue remove expects a callback');
+      throw new Error('MinPriorityQueue remove expects a callback');
     }
 
     const removed = [];
@@ -113,7 +121,7 @@ class PriorityQueue {
    */
   contains(cb) {
     if (typeof cb !== 'function') {
-      throw new Error('PriorityQueue contains expects a callback');
+      throw new Error('MinPriorityQueue contains expects a callback');
     }
 
     let found = false;
@@ -167,7 +175,7 @@ class PriorityQueue {
   }
 
   /**
-   * Implements an iterable on the priority queue
+   * Implements an iterable on the min priority queue
    * @public
    */
   [Symbol.iterator]() {
@@ -187,11 +195,15 @@ class PriorityQueue {
    * Creates a priority queue from an existing array
    * @public
    * @static
-   * @returns {PriorityQueue}
+   * @returns {MinPriorityQueue}
    */
-  static fromArray(values, compare) {
-    return new PriorityQueue(compare, values);
+  static fromArray(values, getCompareValue) {
+    const heap = new Heap(getMinCompare(getCompareValue), values);
+    return new MinPriorityQueue(
+      getCompareValue,
+      new MinHeap(getCompareValue, heap).fix()
+    );
   }
 }
 
-exports.PriorityQueue = PriorityQueue;
+exports.MinPriorityQueue = MinPriorityQueue;
