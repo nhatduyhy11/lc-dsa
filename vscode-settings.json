@@ -1,0 +1,34 @@
+{
+    "editor.formatOnPaste": true,
+    "git.autofetch": true,
+    "prettier.tabWidth": 4,
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.wordWrapColumn": 80,
+    "editor.rulers": [90],
+    "[markdown]": {
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 55,
+        "editor.wrappingStrategy": "simple"
+    },
+    "diffEditor.wordWrap": "on",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "explorer.confirmDragAndDrop": false,
+    "labuladong-leetcode.workspaceFolder": "d:\\myData\\labu",
+    "leetcode-problem-rating.workspaceFolder": "C:\\Users\\danh2k\\.lcpr",
+    "labuladong-leetcode.nodePath": "C:\\Users\\danh2k\\.nvm\\versions\\node\\v20.18.0\\bin\\node.exe"
+}
